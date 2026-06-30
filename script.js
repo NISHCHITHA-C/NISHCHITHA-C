@@ -81,30 +81,92 @@ let pi=0,ci=0,del=false;
   setTimeout(type, del?40:75);
 })();
 
-/* ===== Streaming console ===== */
-const lines = [
-  ['k','>>> ','','spark.readStream.format("cloudFiles")  # CDC ingest'],
-  ['','[bronze] ','ok','✓ ','','streamed ','n','98.6 GB','',' today'],
-  ['','[silver] ','ok','✓ ','','merged 3 sources → ','n','unified_delta',''],
-  ['','[gold]   ','ok','✓ ','','KPIs built · 14 quality checks passed'],
-  ['','[sync]   ','ok','✓ ','','ADLS → Azure DW synced'],
-  ['k','>>> ','','latency_check()','',''],
-  ['','[metric] ','ok','✓ ','','end-to-end latency ','n','12m 4s','',' (was 6h)'],
-  ['ok','◆ pipeline healthy · streaming','','']
-];
+/* ===== Pipeline workloads (drive the switcher) ===== */
+const WORKLOADS = {
+  streaming: {
+    mode:'streaming', css:'#c6ff3a', rgb:'198,255,58', speed:1,
+    nodes:['98.6 GB landed','3 sources merged','14 checks passed','12m 4s latency'],
+    console:[
+      ['k','>>> ','','spark.readStream.format("cloudFiles")  # CDC ingest'],
+      ['','[bronze] ','ok','✓ ','','streamed ','n','98.6 GB','',' today'],
+      ['','[silver] ','ok','✓ ','','merged 3 sources → ','n','unified_delta'],
+      ['','[gold]   ','ok','✓ ','','KPIs built · 14 quality checks passed'],
+      ['','[sync]   ','ok','✓ ','','ADLS → Azure DW synced'],
+      ['k','>>> ','','latency_check()','',''],
+      ['','[metric] ','ok','✓ ','','end-to-end latency ','n','12m 4s','',' (was 6h)'],
+      ['ok','◆ pipeline healthy · streaming','','']
+    ]
+  },
+  batch: {
+    mode:'batch', css:'#7b5cff', rgb:'123,92,255', speed:.42,
+    nodes:['10,240 records','Oracle + SQL merge','+25% completeness','CSV → FTP'],
+    console:[
+      ['k','>>> ','','spark.read.format("jdbc")  # Oracle + SQL Server'],
+      ['','[bronze] ','ok','✓ ','','ingested ','n','10,240 records','',' (3 sources)'],
+      ['','[silver] ','ok','✓ ','','medallion merge · Dynamics 365 join'],
+      ['','[gold]   ','ok','✓ ','','sales completeness ','n','+25%','',' · 18 KPIs'],
+      ['','[deliver]','ok','✓ ','','CSV → FTP · 50+ business entities'],
+      ['k','>>> ','','quality_report()','',''],
+      ['','[metric] ','ok','✓ ','','Spark runtime ','n','-65%','',' (skew fixed)'],
+      ['ok','◆ batch run complete · medallion','','']
+    ]
+  },
+  realtime: {
+    mode:'realtime', css:'#36e0ff', rgb:'54,224,255', speed:2.3,
+    nodes:['4,812 ev/s','sub-sec dedupe','live KPIs','280 ms p99'],
+    console:[
+      ['k','>>> ','','readStream.trigger(processingTime="1s")'],
+      ['','[tail]   ','ok','✓ ','','live events ','n','4,812 ev/s'],
+      ['','[merge]  ','ok','✓ ','','sub-second dedupe + upsert'],
+      ['','[gold]   ','ok','✓ ','','streaming KPIs refreshed'],
+      ['','[push]   ','ok','✓ ','','→ dashboard · ','n','280 ms','',' p99'],
+      ['ok','◆ realtime stream · healthy','','']
+    ]
+  }
+};
+
+/* ===== Streaming console (restartable) ===== */
+let conLines = WORKLOADS.streaming.console;
 const con = document.getElementById('console');
-let started=false;
+let conGen = 0;                              // generation token cancels stale loops
 function runConsole(){
-  if(started) return; started=true;
-  let i=0;
+  const gen = ++conGen;
+  con.innerHTML = '';
+  let i = 0;
   (function next(){
-    if(i>=lines.length){ setTimeout(()=>{con.innerHTML='';started=false;runConsole();},3500); return; }
-    const parts=lines[i]; let html='';
-    for(let p=0;p<parts.length;p+=2) html+=`<span class="${parts[p]}">${parts[p+1]}</span>`;
-    con.innerHTML += html+'\n'; i++;
+    if(gen !== conGen) return;               // superseded by a newer run
+    if(i >= conLines.length){ setTimeout(()=>{ if(gen === conGen) runConsole(); }, 3500); return; }
+    const parts = conLines[i]; let html = '';
+    for(let p=0;p<parts.length;p+=2) html += `<span class="${parts[p]}">${parts[p+1]}</span>`;
+    con.innerHTML += html + '\n'; i++;
     setTimeout(next, 420);
   })();
 }
+
+/* ===== Pipeline switcher — clicking a button morphs the page data ===== */
+let netAccentRGB = WORKLOADS.streaming.rgb;  // background network colour
+let netSpeedMul = WORKLOADS.streaming.speed; // background packet speed
+const swButtons = document.querySelectorAll('.sw-btn');
+const nMetrics = document.querySelectorAll('.n-metric');
+const conMode = document.getElementById('console-mode');
+function setWorkload(key){
+  const w = WORKLOADS[key]; if(!w) return;
+  swButtons.forEach(b => b.classList.toggle('active', b.dataset.w === key));
+  // flip the medallion node metrics
+  nMetrics.forEach((el, i) => {
+    el.classList.add('flip');
+    setTimeout(()=>{ el.textContent = w.nodes[i]; el.classList.remove('flip'); }, 220);
+  });
+  // re-run the console with this workload's log
+  conLines = w.console;
+  if(conMode) conMode.textContent = w.mode;
+  runConsole();
+  // re-theme: accent colour ripples across the whole page
+  document.documentElement.style.setProperty('--accent', w.css);
+  netAccentRGB = w.rgb;
+  netSpeedMul = w.speed;
+}
+swButtons.forEach(b => b.addEventListener('click', ()=>setWorkload(b.dataset.w)));
 
 /* ===== Reveal ===== */
 const io = new IntersectionObserver((es)=>{
@@ -233,8 +295,8 @@ function drawGraph(){
     n.bx = camx * depth; n.by = camy * depth;
   }));
 
-  const edge   = light ? 'rgba(40,55,20,'  : 'rgba(198,255,58,';
-  const accent = light ? '60,90,30'        : '198,255,58';
+  const edge   = light ? 'rgba(40,55,20,'  : `rgba(${netAccentRGB},`;
+  const accent = light ? '60,90,30'        : netAccentRGB;
   const accent2 = '123,92,255';
 
   // edges (pipelines)
@@ -249,7 +311,7 @@ function drawGraph(){
 
   // packets flowing along edges
   packets.forEach(pk => {
-    pk.t += pk.speed;
+    pk.t += pk.speed * netSpeedMul;
     if(pk.t > 1) pk.t -= 1;
     const ax = pk.a.x + pk.a.bx, ay = pk.a.y + pk.a.by;
     const bx = pk.b.x + pk.b.bx, by = pk.b.y + pk.b.by;
