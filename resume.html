@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Nishchitha C — Résumé</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Space+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root{--ink:#11141b;--muted:#5b6473;--accent:#3f8f00;--line:#e6e2d8}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Space Grotesk',system-ui,sans-serif;color:var(--ink);background:#cdd0d6;line-height:1.5;padding:2rem}
+  .sheet{max-width:820px;margin:0 auto;background:#fff;padding:3rem 3.2rem;box-shadow:0 20px 60px rgba(0,0,0,.18)}
+  header{border-bottom:2px solid var(--ink);padding-bottom:1.2rem;margin-bottom:1.6rem}
+  h1{font-family:'Syne',sans-serif;font-weight:800;font-size:2.6rem;letter-spacing:-.03em;line-height:1}
+  .role{font-family:'JetBrains Mono',monospace;font-size:.82rem;letter-spacing:.18em;color:var(--accent);margin-top:.5rem;text-transform:uppercase}
+  .contact{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--muted);margin-top:.7rem;display:flex;flex-wrap:wrap;gap:1rem}
+  .contact a{color:var(--muted)}
+  section{margin-bottom:1.5rem}
+  h2{font-family:'JetBrains Mono',monospace;font-size:.74rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:.7rem;border-bottom:1px solid var(--line);padding-bottom:.35rem}
+  .item{margin-bottom:1rem}
+  .item .top{display:flex;justify-content:space-between;align-items:baseline;gap:1rem}
+  .item h3{font-family:'Syne',sans-serif;font-size:1.05rem}
+  .item .when{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--muted);white-space:nowrap}
+  .item .where{font-size:.85rem;color:var(--muted);font-style:italic;margin-bottom:.3rem}
+  ul{padding-left:1.1rem}
+  li{font-size:.9rem;margin-bottom:.25rem}
+  .summary{font-size:.95rem;color:#2a2f3a}
+  .skills{display:grid;grid-template-columns:auto 1fr;gap:.4rem 1rem;font-size:.88rem}
+  .skills b{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.05em;color:var(--accent);text-transform:uppercase;padding-top:.15rem}
+  .note{font-size:.75rem;color:var(--muted);margin-top:.4rem}
+  .print-btn{position:fixed;bottom:1.5rem;right:1.5rem;font-family:'JetBrains Mono',monospace;font-size:.8rem;
+    background:var(--ink);color:#fff;border:none;padding:.85rem 1.4rem;border-radius:999px;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+  @media print{
+    body{background:#fff;padding:0}
+    .sheet{box-shadow:none;max-width:none;padding:1.4rem 1.6rem}
+    .print-btn{display:none}
+    @page{margin:1.2cm}
+  }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <header>
+    <h1>Nishchitha&nbsp;C</h1>
+    <div class="role">Data Engineer</div>
+    <div class="contact">
+      <a href="mailto:cnish1111@gmail.com">cnish1111@gmail.com</a>
+      <a href="https://github.com/nishchitha-c">github.com/nishchitha-c</a>
+      <a href="https://linkedin.com/in/">linkedin.com/in/</a>
+    </div>
+  </header>
+
+  <section>
+    <h2>Summary</h2>
+    <p class="summary">Data engineer focused on building resilient ingestion, tested transformations, and observable orchestration. I turn raw, messy sources into clean, queryable, trustworthy data — and write the maintainable code that keeps it flowing.</p>
+  </section>
+
+  <section>
+    <h2>Experience</h2>
+    <div class="item">
+      <div class="top"><h3>Software Engineer Intern</h3><span class="when">2020 — 2020</span></div>
+      <div class="where">Electronics Company</div>
+      <ul>
+        <li>Built an automated daily test service to surface regressions faster for the team.</li>
+        <li>Wrote Python &amp; PowerShell scripts to aggregate XML results and load builds onto hardware.</li>
+        <li>Used Jenkins to run a continuous-integration pipeline that built, tested, and reported daily.</li>
+      </ul>
+    </div>
+    <div class="item">
+      <div class="top"><h3>Developer Intern</h3><span class="when">2019 — 2019</span></div>
+      <div class="where">Startup, Inc</div>
+      <ul>
+        <li>Shipped cross-platform front-end features for a mobile app.</li>
+        <li>Integrated cloud-backed storage to sync user data across web &amp; mobile.</li>
+        <li>Collaborated through Git-based version control and code review.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>Projects</h2>
+    <div class="item">
+      <div class="top"><h3>End-to-End ETL Platform</h3><span class="when">Python · Airflow · dbt</span></div>
+      <ul><li>Modular ingest → transform → warehouse pipeline with data-quality checks and idempotent DAGs.</li></ul>
+    </div>
+    <div class="item">
+      <div class="top"><h3>Cloud Automation Engine</h3><span class="when">Python · Selenium · GCP</span></div>
+      <ul><li>Cron-scheduled automation bot running unattended on a cloud VM.</li></ul>
+    </div>
+    <div class="item">
+      <div class="top"><h3>Transaction Data System</h3><span class="when">Java · JavaFX</span></div>
+      <ul><li>Object-oriented transaction simulator modeling accounts, deposits, and withdrawals.</li></ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>Skills</h2>
+    <div class="skills">
+      <b>Languages</b><span>Python, SQL, Java, JavaScript</span>
+      <b>Data &amp; Cloud</b><span>Airflow, dbt, Spark, Kafka, BigQuery, Google Cloud</span>
+      <b>Tooling</b><span>Git, Jenkins, Docker, Terraform, Linux</span>
+    </div>
+    <p class="note">Note: placeholder content based on a template résumé — replace with real details.</p>
+  </section>
+</div>
+<button class="print-btn" onclick="window.print()">⌘ Save as PDF</button>
+</body>
+</html>

@@ -1,5 +1,25 @@
 document.getElementById('year').textContent = new Date().getFullYear();
 
+/* ===== Preloader ===== */
+const pre = document.getElementById('preloader');
+const preFill = document.getElementById('pre-fill');
+const preCount = document.getElementById('pre-count');
+let pct = 0;
+const preTimer = setInterval(()=>{
+  pct += Math.random()*16;
+  if(pct >= 100){ pct = 100; clearInterval(preTimer); setTimeout(()=>pre.classList.add('done'), 350); }
+  preFill.style.width = pct+'%';
+  preCount.textContent = Math.floor(pct)+'%';
+}, 130);
+
+/* ===== Theme toggle ===== */
+const themeBtn = document.getElementById('theme');
+if(localStorage.getItem('theme') === 'light') document.body.classList.add('light');
+themeBtn.addEventListener('click', ()=>{
+  document.body.classList.toggle('light');
+  localStorage.setItem('theme', document.body.classList.contains('light') ? 'light' : 'dark');
+});
+
 /* ===== Custom cursor ===== */
 const cur = document.getElementById('cursor');
 const dot = document.getElementById('cursor-dot');
@@ -161,9 +181,11 @@ function drawGlobe(){
     }
   }
   // dots
+  const light = document.body.classList.contains('light');
   proj.forEach(p=>{
     const op=Math.max(.08,(p.scale-.55)*1.4);
-    ctx.fillStyle = p.z<0 ? `rgba(123,92,255,${op})` : `rgba(198,255,58,${op})`;
+    const front = light ? `rgba(60,90,30,${op})` : `rgba(198,255,58,${op})`;
+    ctx.fillStyle = p.z<0 ? `rgba(123,92,255,${op})` : front;
     ctx.beginPath();ctx.arc(p.sx,p.sy,1.5*p.scale,0,7);ctx.fill();
   });
   requestAnimationFrame(drawGlobe);
