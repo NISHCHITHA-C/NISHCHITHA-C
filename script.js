@@ -68,7 +68,7 @@ addEventListener('scroll',()=>{
 });
 
 /* ===== Typewriter ===== */
-const phrases = ['at the speed of thought.','one DAG at a time.','without the 3am pages.','in real time.'];
+const phrases = ['6 hours down to 15 minutes.','~100GB a day.','with medallion architecture.','on Delta Lake.'];
 const typed = document.getElementById('typed');
 let pi=0,ci=0,del=false;
 (function type(){
@@ -83,14 +83,14 @@ let pi=0,ci=0,del=false;
 
 /* ===== Streaming console ===== */
 const lines = [
-  ['k','$ ','','airflow dags trigger etl_pipeline'],
-  ['','[ingest]   ','ok','✓ ','','pulled ','n','1,284,902','',' rows'],
-  ['','[transform]','ok',' ✓ ','','deduped → ','n','1,209,440','',' clean'],
-  ['','[validate] ','ok',' ✓ ','','12 quality checks passed'],
-  ['','[load]     ','ok',' ✓ ','','warehouse.fact_events updated'],
-  ['k','$ ','','dbt run --select marts','',''],
-  ['','[dbt]      ','ok',' ✓ ','','9 models built in ','n','4.2s',''],
-  ['ok','◆ pipeline healthy · next run 11:00','','']
+  ['k','>>> ','','spark.readStream.format("cloudFiles")  # CDC ingest'],
+  ['','[bronze] ','ok','✓ ','','streamed ','n','98.6 GB','',' today'],
+  ['','[silver] ','ok','✓ ','','merged 3 sources → ','n','unified_delta',''],
+  ['','[gold]   ','ok','✓ ','','KPIs built · 14 quality checks passed'],
+  ['','[sync]   ','ok','✓ ','','ADLS → Azure DW synced'],
+  ['k','>>> ','','latency_check()','',''],
+  ['','[metric] ','ok','✓ ','','end-to-end latency ','n','12m 4s','',' (was 6h)'],
+  ['ok','◆ pipeline healthy · streaming','','']
 ];
 const con = document.getElementById('console');
 let started=false;
