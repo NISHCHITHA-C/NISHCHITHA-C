@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>404 — Nishchitha C</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Space+Grotesk:wght@400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
+<style>
+  :root{--bg:#06070a;--ink:#f4f1ea;--muted:#7c8597;--accent:#c6ff3a;--accent2:#7b5cff}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--ink);font-family:'Space Grotesk',system-ui,sans-serif;
+    min-height:100vh;display:grid;place-items:center;overflow:hidden;position:relative;text-align:center;padding:2rem}
+  .grid{position:absolute;inset:0;background-image:linear-gradient(rgba(198,255,58,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(198,255,58,.05) 1px,transparent 1px);background-size:46px 46px;mask:radial-gradient(circle at 50% 45%,#000,transparent 75%)}
+  .wrap{position:relative;z-index:1}
+  .tag{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.22em;color:var(--accent);margin-bottom:1.5rem}
+  h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(6rem,28vw,18rem);line-height:.85;letter-spacing:-.05em;
+    background:linear-gradient(120deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .msg{font-family:'JetBrains Mono',monospace;font-size:.95rem;color:var(--muted);margin:1rem 0 2.5rem}
+  .msg b{color:var(--ink)}
+  .home{display:inline-flex;align-items:center;gap:.7rem;background:var(--accent);color:#06070a;
+    font-family:'JetBrains Mono',monospace;font-size:.85rem;text-transform:uppercase;letter-spacing:.05em;
+    padding:1rem 1.8rem;border-radius:999px;text-decoration:none;transition:transform .3s}
+  .home:hover{transform:translateY(-3px)}
+</style>
+</head>
+<body>
+<div class="grid"></div>
+<div class="wrap">
+  <p class="tag">// PIPELINE BROKEN · NULL RECORD</p>
+  <h1>404</h1>
+  <p class="msg">This route returned <b>no rows</b>. The page you're looking for isn't in the warehouse.</p>
+  <a class="home" href="/">← Back to home</a>
+</div>
+</body>
+</html>

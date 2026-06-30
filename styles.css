@@ -160,6 +160,20 @@ body.light #console{color:#3a4757}
 /* contact */
 .contact-mega{font-family:var(--syne);font-weight:800;line-height:.9;letter-spacing:-.04em;
   font-size:clamp(3rem,13vw,11rem);margin:1rem 0 2.5rem}
+/* contact form */
+.cform{max-width:620px;margin:0 0 3rem;text-align:left}
+.cform label{display:block;font-family:var(--mono);font-size:.7rem;letter-spacing:.15em;color:var(--muted);margin-bottom:1.2rem}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}
+.cform input,.cform textarea{width:100%;margin-top:.5rem;background:rgba(255,255,255,.03);border:1px solid var(--line);
+  border-radius:12px;padding:.9rem 1rem;color:var(--ink);font-family:var(--sans);font-size:1rem;transition:border-color .3s;resize:vertical;cursor:none}
+body.light .cform input,body.light .cform textarea{background:rgba(0,0,0,.03)}
+.cform input:focus,.cform textarea:focus{outline:none;border-color:var(--accent)}
+.cform .cta{border:none;cursor:none;margin-top:.4rem}
+.cform .cta.sending{opacity:.6;pointer-events:none}
+.form-status{font-family:var(--mono);font-size:.82rem;margin-top:1rem;min-height:1.2em}
+.form-status.ok{color:var(--accent)}
+.form-status.err{color:#ff6b6b}
+.mail-or{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;color:var(--muted);margin-bottom:.8rem}
 .mail{font-family:var(--mono);font-size:clamp(1rem,4vw,2rem);border-bottom:2px solid var(--accent);padding-bottom:.3rem;display:inline-block;transition:color .3s}
 .mail:hover{color:var(--accent)}
 .socials{display:flex;gap:2rem;margin-top:3rem;font-family:var(--mono);font-size:.85rem;letter-spacing:.1em}
