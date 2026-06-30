@@ -3,10 +3,11 @@
 
 ---
 
-- 🔭 I build resilient data systems — ingestion, transformation, orchestration & the clean code that ties it together
-- 🧪 I care about trustworthy data, idempotent pipelines, and observable systems
-- ⚙️ Toolbox: **Python · SQL · Airflow · dbt · Google Cloud · Git · Jenkins · Linux · Docker**
-- 📫 Reach me: **cnish1111@gmail.com**
+- 🔭 Data Engineer with **4+ years** building large-scale ETL & real-time streaming pipelines on Databricks and Apache Spark
+- 🚀 Led a CDC-based architecture processing **~100GB/day** at Ticketmaster — cut data latency from **6 hours to under 15 minutes**
+- 🧱 Specialized in **medallion architecture, Delta Lake, and automated data quality on Azure**
+- ⚙️ Toolbox: **Python · SQL · PySpark · Databricks · Delta Lake · Azure (ADLS) · Unity Catalog · Oracle · SQL Server**
+- 📫 Reach me: **cnish1111@gmail.com** · 📍 Bengaluru, Karnataka
 
 ### ✨ Creative Portfolio
 A single-page, animated portfolio lives in this repo — `index.html`, `styles.css`, `script.js`.
@@ -22,6 +23,3 @@ Run locally:
 python3 -m http.server 8000   # open http://localhost:8000
 ```
 
-> The supplied resume PDF was a placeholder template, so experience/projects are
-> written generically around a data-engineering theme — swap in your real details
-> inside `index.html` (`#pipeline`, `#projects`, `#skills`, `#contact`).

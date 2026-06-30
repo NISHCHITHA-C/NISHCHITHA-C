@@ -44,63 +44,76 @@
     <h1>Nishchitha&nbsp;C</h1>
     <div class="role">Data Engineer</div>
     <div class="contact">
+      <span>Bengaluru, Karnataka</span>
+      <a href="tel:+918904050485">+91 8904050485</a>
       <a href="mailto:cnish1111@gmail.com">cnish1111@gmail.com</a>
-      <a href="https://github.com/nishchitha-c">github.com/nishchitha-c</a>
-      <a href="https://linkedin.com/in/">linkedin.com/in/</a>
+      <a href="https://linkedin.com/in/nishchitha-c">linkedin.com/in/nishchitha-c</a>
+      <a href="https://github.com/NISHCHITHA-C">github.com/NISHCHITHA-C</a>
     </div>
   </header>
 
   <section>
     <h2>Summary</h2>
-    <p class="summary">Data engineer focused on building resilient ingestion, tested transformations, and observable orchestration. I turn raw, messy sources into clean, queryable, trustworthy data — and write the maintainable code that keeps it flowing.</p>
+    <p class="summary">Data Engineer with 4+ years building large-scale ETL and real-time streaming pipelines on Databricks and Apache Spark. Led CDC-based architecture processing ~100GB/day at Ticketmaster, reducing data latency from 6 hours to under 15 minutes. Specialized in medallion architecture, Delta Lake, and automated data quality on Azure.</p>
   </section>
 
   <section>
     <h2>Experience</h2>
     <div class="item">
-      <div class="top"><h3>Software Engineer Intern</h3><span class="when">2020 — 2020</span></div>
-      <div class="where">Electronics Company</div>
+      <div class="top"><h3>Data Engineer — Skill-mine Technology Consulting</h3><span class="when">Jul 2024 — Present</span></div>
+      <div class="where">Client: EssilorLuxottica · Bengaluru, Karnataka</div>
       <ul>
-        <li>Built an automated daily test service to surface regressions faster for the team.</li>
-        <li>Wrote Python &amp; PowerShell scripts to aggregate XML results and load builds onto hardware.</li>
-        <li>Used Jenkins to run a continuous-integration pipeline that built, tested, and reported daily.</li>
+        <li>Implemented an end-to-end ETL pipeline integrating multi-source data (Oracle, SQL Server, template inputs) to consolidate region-specific sales data for KPI-driven analytics and executive reporting.</li>
+        <li>Engineered a template-driven ingestion workflow enabling 50+ business entities to submit corrections and order-level discounts via a standardized Excel toolkit; automated CSV → FTP delivery feeding the bronze/silver/gold medallion pipeline alongside Dynamics 365 data (~10K records/month, +25% completeness).</li>
+        <li>Built a classification pipeline processing 35+ Excel mapping sheets through regex-based rules across products, coatings, materials, and customer dimensions.</li>
+        <li>Diagnosed performance bottlenecks using Spark UI (DAG, stage/task metrics, shuffle analysis) to fix skew, spills, and inefficient joins — reduced job runtime by 65%.</li>
+        <li>Built an AI-augmented error-detection pipeline using Databricks AI Functions, surfacing 20% of previously silent failures across 10+ workflows and reducing manual debugging by 4 hrs/week.</li>
+        <li>Designed automated cross-team failure detection (auto-generated support tickets) and a real-time failure dashboard — −15% repeated failures, −20% ticket volume.</li>
       </ul>
     </div>
     <div class="item">
-      <div class="top"><h3>Developer Intern</h3><span class="when">2019 — 2019</span></div>
-      <div class="where">Startup, Inc</div>
+      <div class="top"><h3>Data Engineer — TEKsystems Global Services</h3><span class="when">Nov 2021 — May 2024</span></div>
+      <div class="where">Client: Ticketmaster · Bengaluru, Karnataka</div>
       <ul>
-        <li>Shipped cross-platform front-end features for a mobile app.</li>
-        <li>Integrated cloud-backed storage to sync user data across web &amp; mobile.</li>
-        <li>Collaborated through Git-based version control and code review.</li>
+        <li>Designed and led a CDC-based ingestion architecture handling ~100GB/day across streaming (80%) and batch (20%) sources — reduced end-to-end latency from ~6 hours to under 15 minutes.</li>
+        <li>Architected an end-to-end ETL pipeline on Databricks (extraction → transformation → ADLS → sync-back), eliminating ~12 hrs/week of manual work across 5+ scheduled jobs.</li>
+        <li>Designed a multi-source synchronization layer consolidating three streaming sources into a single unified table, eliminating downstream discrepancies reported by 4 teams.</li>
+        <li>Resolved a migration bottleneck using incremental merge between Oracle and Databricks, cutting migration time by ~60%.</li>
+        <li>Resolved cross-platform (Databricks–ADW) data-type incompatibilities using external delta tables, unblocking analytics for 3 downstream teams.</li>
+        <li>Built automated monitoring and alerting, reducing incident detection from 24 hours to 1 hour.</li>
       </ul>
-    </div>
-  </section>
-
-  <section>
-    <h2>Projects</h2>
-    <div class="item">
-      <div class="top"><h3>End-to-End ETL Platform</h3><span class="when">Python · Airflow · dbt</span></div>
-      <ul><li>Modular ingest → transform → warehouse pipeline with data-quality checks and idempotent DAGs.</li></ul>
-    </div>
-    <div class="item">
-      <div class="top"><h3>Cloud Automation Engine</h3><span class="when">Python · Selenium · GCP</span></div>
-      <ul><li>Cron-scheduled automation bot running unattended on a cloud VM.</li></ul>
-    </div>
-    <div class="item">
-      <div class="top"><h3>Transaction Data System</h3><span class="when">Java · JavaFX</span></div>
-      <ul><li>Object-oriented transaction simulator modeling accounts, deposits, and withdrawals.</li></ul>
     </div>
   </section>
 
   <section>
     <h2>Skills</h2>
     <div class="skills">
-      <b>Languages</b><span>Python, SQL, Java, JavaScript</span>
-      <b>Data &amp; Cloud</b><span>Airflow, dbt, Spark, Kafka, BigQuery, Google Cloud</span>
-      <b>Tooling</b><span>Git, Jenkins, Docker, Terraform, Linux</span>
+      <b>Languages</b><span>Python, SQL</span>
+      <b>Big Data</b><span>Apache Spark (PySpark), Databricks, Delta Lake, Structured Streaming, Batch Processing, Pandas</span>
+      <b>Cloud</b><span>Azure (ADLS, Azure Data Warehouse), Databricks Unity Catalog</span>
+      <b>Sources</b><span>Oracle, SQL Server, Dynamics 365</span>
+      <b>Concepts</b><span>ETL/ELT, CDC, Medallion Architecture, Data Migration, Data Quality, Data Modeling</span>
+      <b>Tools</b><span>Git, Spark UI</span>
     </div>
-    <p class="note">Note: placeholder content based on a template résumé — replace with real details.</p>
+  </section>
+
+  <section>
+    <h2>Education</h2>
+    <div class="item">
+      <div class="top"><h3>B.E., Information Science — Sapthagiri College of Engineering</h3><span class="when">Jul 2021</span></div>
+      <div class="where">Bengaluru, Karnataka</div>
+    </div>
+    <div class="item">
+      <div class="top"><h3>PG Diploma in Data Science — Cranes Varsity</h3><span class="when">Nov 2021</span></div>
+      <div class="where">Bengaluru, Karnataka</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Achievements</h2>
+    <ul>
+      <li>Spot Award, TEKsystems (Jul 2023) — recognized for quick learning and excellence in Databricks (PySpark).</li>
+    </ul>
   </section>
 </div>
 <button class="print-btn" onclick="window.print()">⌘ Save as PDF</button>
