@@ -1,111 +1,171 @@
-// ---- Year ----
 document.getElementById('year').textContent = new Date().getFullYear();
 
-// ---- Typed hero phrases ----
-const phrases = ['reliable pipelines.', 'clean data models.', 'real-time insight.', 'elegant code.'];
+/* ===== Custom cursor ===== */
+const cur = document.getElementById('cursor');
+const dot = document.getElementById('cursor-dot');
+let mx = innerWidth/2, my = innerHeight/2, cx = mx, cy = my;
+addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  dot.style.left = mx+'px'; dot.style.top = my+'px';
+});
+(function follow(){
+  cx += (mx-cx)*.18; cy += (my-cy)*.18;
+  cur.style.left = cx+'px'; cur.style.top = cy+'px';
+  requestAnimationFrame(follow);
+})();
+document.querySelectorAll('a,button,.magnetic,.tilt,.chips span').forEach(el=>{
+  el.addEventListener('mouseenter',()=>cur.classList.add('grow'));
+  el.addEventListener('mouseleave',()=>cur.classList.remove('grow'));
+});
+
+/* ===== Magnetic buttons ===== */
+document.querySelectorAll('.magnetic').forEach(el=>{
+  el.addEventListener('mousemove',e=>{
+    const r = el.getBoundingClientRect();
+    const x = e.clientX - r.left - r.width/2;
+    const y = e.clientY - r.top - r.height/2;
+    el.style.transform = `translate(${x*.35}px,${y*.35}px)`;
+  });
+  el.addEventListener('mouseleave',()=>el.style.transform='');
+});
+
+/* ===== Tilt cards ===== */
+document.querySelectorAll('.tilt').forEach(el=>{
+  el.addEventListener('mousemove',e=>{
+    const r = el.getBoundingClientRect();
+    const px = (e.clientX-r.left)/r.width - .5;
+    const py = (e.clientY-r.top)/r.height - .5;
+    el.style.transform = `perspective(800px) rotateY(${px*8}deg) rotateX(${-py*8}deg) translateY(-4px)`;
+  });
+  el.addEventListener('mouseleave',()=>el.style.transform='');
+});
+
+/* ===== Scroll progress ===== */
+const prog = document.getElementById('progress');
+addEventListener('scroll',()=>{
+  const h = document.documentElement.scrollHeight - innerHeight;
+  prog.style.width = (scrollY/h*100)+'%';
+});
+
+/* ===== Typewriter ===== */
+const phrases = ['at the speed of thought.','one DAG at a time.','without the 3am pages.','in real time.'];
 const typed = document.getElementById('typed');
-let pi = 0, ci = 0, deleting = false;
+let pi=0,ci=0,del=false;
 (function type(){
-  const word = phrases[pi];
-  typed.textContent = word.slice(0, ci);
-  if(!deleting && ci < word.length){ ci++; }
-  else if(!deleting && ci === word.length){ deleting = true; return setTimeout(type, 1600); }
-  else if(deleting && ci > 0){ ci--; }
-  else { deleting = false; pi = (pi+1) % phrases.length; }
-  setTimeout(type, deleting ? 45 : 85);
+  const w = phrases[pi];
+  typed.textContent = w.slice(0,ci);
+  if(!del && ci<w.length) ci++;
+  else if(!del && ci===w.length){ del=true; return setTimeout(type,1700); }
+  else if(del && ci>0) ci--;
+  else { del=false; pi=(pi+1)%phrases.length; }
+  setTimeout(type, del?40:75);
 })();
 
-// ---- Animated terminal code ----
-const codeLines = [
-  ['c','# etl_pipeline.py — ingest · transform · serve'],
-  ['k','import ','f','pandas ','k','as ','f','pd'],
-  ['k','from ','f','airflow ','k','import ','f','DAG\n'],
-  ['k','def ','f','transform','c','(df):'],
-  ['s','    df = df.dropna().drop_duplicates()'],
-  ['s','    df["clean"] = df["raw"].str.lower()'],
-  ['k','    return ','f','df.pipe(validate)\n'],
-  ['c','# orchestrate the flow ⚙️'],
-  ['f','pipeline ','c','>> ','f','warehouse ','c','>> ','s','dashboards ✅'],
+/* ===== Streaming console ===== */
+const lines = [
+  ['k','$ ','','airflow dags trigger etl_pipeline'],
+  ['','[ingest]   ','ok','✓ ','','pulled ','n','1,284,902','',' rows'],
+  ['','[transform]','ok',' ✓ ','','deduped → ','n','1,209,440','',' clean'],
+  ['','[validate] ','ok',' ✓ ','','12 quality checks passed'],
+  ['','[load]     ','ok',' ✓ ','','warehouse.fact_events updated'],
+  ['k','$ ','','dbt run --select marts','',''],
+  ['','[dbt]      ','ok',' ✓ ','','9 models built in ','n','4.2s',''],
+  ['ok','◆ pipeline healthy · next run 11:00','','']
 ];
-const codeEl = document.getElementById('code-anim');
-let li = 0, idx = 0;
-function renderCode(){
-  if(li >= codeLines.length) return;
-  const parts = codeLines[li];
-  let html = '';
-  for(let p=0;p<parts.length;p+=2){
-    html += `<span class="${parts[p]}">${parts[p+1].replace(/</g,'&lt;')}</span>`;
-  }
-  const built = codeEl.innerHTML.split('\n');
-  built[li] = html;
-  codeEl.innerHTML = built.join('\n') + (li < codeLines.length-1 ? '\n' : '');
-  li++;
-  setTimeout(renderCode, 280);
+const con = document.getElementById('console');
+let started=false;
+function runConsole(){
+  if(started) return; started=true;
+  let i=0;
+  (function next(){
+    if(i>=lines.length){ setTimeout(()=>{con.innerHTML='';started=false;runConsole();},3500); return; }
+    const parts=lines[i]; let html='';
+    for(let p=0;p<parts.length;p+=2) html+=`<span class="${parts[p]}">${parts[p+1]}</span>`;
+    con.innerHTML += html+'\n'; i++;
+    setTimeout(next, 420);
+  })();
 }
-setTimeout(renderCode, 600);
 
-// ---- Reveal on scroll ----
-const io = new IntersectionObserver((entries)=>{
-  entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
-}, {threshold:.15});
-document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
-
-// ---- Count up stats ----
-const counters = document.querySelectorAll('[data-count]');
-const cio = new IntersectionObserver((entries)=>{
-  entries.forEach(e=>{
+/* ===== Reveal ===== */
+const io = new IntersectionObserver((es)=>{
+  es.forEach(e=>{
     if(!e.isIntersecting) return;
-    const el = e.target, target = +el.dataset.count;
-    let n = 0; const step = Math.max(1, Math.round(target/40));
-    const t = setInterval(()=>{ n+=step; if(n>=target){n=target;clearInterval(t);} el.textContent=n; }, 30);
+    e.target.classList.add('in');
+    if(e.target.id==='flow' || e.target.querySelector?.('#console')) runConsole();
+    io.unobserve(e.target);
+  });
+},{threshold:.18});
+document.querySelectorAll('.section .eyebrow,.big-statement,.stats,.work-row,.flow,.console,.chips,.contact-mega,.mail,.socials').forEach(el=>io.observe(el));
+io.observe(document.getElementById('flow'));
+
+/* ===== Count up ===== */
+const cio = new IntersectionObserver((es)=>{
+  es.forEach(e=>{
+    if(!e.isIntersecting) return;
+    const el=e.target, t=+el.dataset.count; let n=0, step=Math.max(1,t/35);
+    const iv=setInterval(()=>{n+=step;if(n>=t){n=t;clearInterval(iv);}el.textContent=Math.round(n);},28);
     cio.unobserve(el);
   });
 },{threshold:.6});
-counters.forEach(c=>cio.observe(c));
+document.querySelectorAll('[data-count]').forEach(c=>cio.observe(c));
 
-// ---- Skill bars ----
-const bars = document.querySelectorAll('.bar');
-const bio = new IntersectionObserver((entries)=>{
-  entries.forEach(e=>{
-    if(!e.isIntersecting) return;
-    e.target.style.setProperty('--w', e.target.dataset.level + '%');
-    e.target.classList.add('show');
-    bio.unobserve(e.target);
-  });
-},{threshold:.4});
-bars.forEach(b=>bio.observe(b));
+/* ===== Stack chip fills ===== */
+document.querySelectorAll('.chips span').forEach(s=>{
+  s.style.setProperty('--fill', (s.dataset.w*0.6)+'%');
+});
 
-// ---- Animated data-flow background ----
-const canvas = document.getElementById('bg-canvas');
-const ctx = canvas.getContext('2d');
-let W,H,nodes;
+/* ===== Interactive 3D particle globe ===== */
+const cv = document.getElementById('globe');
+const ctx = cv.getContext('2d');
+let W,H,R,pts=[],rot=0,tmx=0,tmy=0,camx=0,camy=0;
 function resize(){
-  W = canvas.width = innerWidth; H = canvas.height = innerHeight;
-  const count = Math.min(70, Math.floor(W*H/24000));
-  nodes = Array.from({length:count},()=>({
-    x:Math.random()*W, y:Math.random()*H,
-    vx:(Math.random()-.5)*.4, vy:(Math.random()-.5)*.4
-  }));
+  W=cv.width=cv.offsetWidth; H=cv.height=cv.offsetHeight; R=Math.min(W,H)*.34;
 }
-resize(); addEventListener('resize', resize);
-function draw(){
+function makeGlobe(){
+  pts=[]; const N=620;
+  for(let i=0;i<N;i++){
+    const y=1-(i/(N-1))*2;
+    const r=Math.sqrt(1-y*y);
+    const phi=i*Math.PI*(3-Math.sqrt(5));
+    pts.push({x:Math.cos(phi)*r, y, z:Math.sin(phi)*r});
+  }
+}
+resize(); makeGlobe(); addEventListener('resize',()=>{resize();});
+addEventListener('mousemove',e=>{ tmx=(e.clientX/innerWidth-.5); tmy=(e.clientY/innerHeight-.5); });
+function drawGlobe(){
   ctx.clearRect(0,0,W,H);
-  for(let i=0;i<nodes.length;i++){
-    const a = nodes[i];
-    a.x+=a.vx; a.y+=a.vy;
-    if(a.x<0||a.x>W)a.vx*=-1;
-    if(a.y<0||a.y>H)a.vy*=-1;
-    for(let j=i+1;j<nodes.length;j++){
-      const b = nodes[j], dx=a.x-b.x, dy=a.y-b.y, d=Math.hypot(dx,dy);
-      if(d<130){
-        ctx.strokeStyle=`rgba(52,224,192,${.12*(1-d/130)})`;
-        ctx.lineWidth=1;
-        ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();
+  camx += (tmy*.5-camx)*.05; camy += (tmx*.5-camy)*.05;
+  rot += .0016;
+  const cx=W/2, cy=H/2;
+  const cosY=Math.cos(rot+camy), sinY=Math.sin(rot+camy);
+  const cosX=Math.cos(camx), sinX=Math.sin(camx);
+  const proj=pts.map(p=>{
+    let x=p.x*cosY - p.z*sinY;
+    let z=p.x*sinY + p.z*cosY;
+    let y=p.y*cosX - z*sinX;
+    z=p.y*sinX + z*cosX;
+    const scale=320/(320+z*R);
+    return {sx:cx+x*R*scale, sy:cy+y*R*scale, z, scale};
+  });
+  // connections
+  for(let i=0;i<proj.length;i+=2){
+    const a=proj[i];
+    for(let j=i+1;j<i+6 && j<proj.length;j++){
+      const b=proj[j];
+      const d=Math.hypot(a.sx-b.sx,a.sy-b.sy);
+      if(d<60){
+        ctx.strokeStyle=`rgba(198,255,58,${.10*(1-d/60)*Math.max(0,a.scale-.6)})`;
+        ctx.lineWidth=.6;
+        ctx.beginPath();ctx.moveTo(a.sx,a.sy);ctx.lineTo(b.sx,b.sy);ctx.stroke();
       }
     }
-    ctx.fillStyle='rgba(108,140,255,.6)';
-    ctx.beginPath();ctx.arc(a.x,a.y,1.6,0,7);ctx.fill();
   }
-  requestAnimationFrame(draw);
+  // dots
+  proj.forEach(p=>{
+    const op=Math.max(.08,(p.scale-.55)*1.4);
+    ctx.fillStyle = p.z<0 ? `rgba(123,92,255,${op})` : `rgba(198,255,58,${op})`;
+    ctx.beginPath();ctx.arc(p.sx,p.sy,1.5*p.scale,0,7);ctx.fill();
+  });
+  requestAnimationFrame(drawGlobe);
 }
-draw();
+drawGlobe();
