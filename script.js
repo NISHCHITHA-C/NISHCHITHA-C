@@ -134,6 +134,36 @@ document.querySelectorAll('.chips span').forEach(s=>{
   s.style.setProperty('--fill', (s.dataset.w*0.6)+'%');
 });
 
+/* ===== Contact form ===== */
+const form = document.getElementById('contact-form');
+const status = document.getElementById('form-status');
+const sendBtn = document.getElementById('send-btn');
+form.addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const data = new FormData(form);
+  // If Formspree isn't configured yet, fall back to a prefilled mailto.
+  if(form.action.includes('your-form-id')){
+    const body = `From: ${data.get('name')} <${data.get('email')}>\n\n${data.get('message')}`;
+    window.location.href = `mailto:cnish1111@gmail.com?subject=${encodeURIComponent('Project enquiry from '+data.get('name'))}&body=${encodeURIComponent(body)}`;
+    status.textContent = 'Opening your email app…';
+    status.className = 'form-status ok';
+    return;
+  }
+  sendBtn.classList.add('sending');
+  status.textContent = 'Sending…'; status.className = 'form-status';
+  try{
+    const res = await fetch(form.action, {method:'POST',body:data,headers:{'Accept':'application/json'}});
+    if(res.ok){
+      form.reset();
+      status.textContent = '✓ Message sent — I\'ll be in touch soon.';
+      status.className = 'form-status ok';
+    } else throw new Error();
+  }catch{
+    status.textContent = '✗ Something went wrong. Email me directly instead.';
+    status.className = 'form-status err';
+  }finally{ sendBtn.classList.remove('sending'); }
+});
+
 /* ===== Interactive 3D particle globe ===== */
 const cv = document.getElementById('globe');
 const ctx = cv.getContext('2d');
