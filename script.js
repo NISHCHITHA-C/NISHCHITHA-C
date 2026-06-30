@@ -85,6 +85,7 @@ let pi=0,ci=0,del=false;
 const WORKLOADS = {
   streaming: {
     mode:'streaming', css:'#c6ff3a', rgb:'198,255,58', speed:1,
+    stats:{ vol:[100,'GB/day processed'], lat:[15,'min latency (from 6 hrs)'], perf:[65,'% faster Spark jobs'] },
     nodes:['98.6 GB landed','3 sources merged','14 checks passed','12m 4s latency'],
     console:[
       ['k','>>> ','','spark.readStream.format("cloudFiles")  # CDC ingest'],
@@ -99,6 +100,7 @@ const WORKLOADS = {
   },
   batch: {
     mode:'batch', css:'#7b5cff', rgb:'123,92,255', speed:.42,
+    stats:{ vol:[10,'K records / month'], lat:[25,'% more completeness'], perf:[65,'% faster Spark jobs'] },
     nodes:['10,240 records','Oracle + SQL merge','+25% completeness','CSV → FTP'],
     console:[
       ['k','>>> ','','spark.read.format("jdbc")  # Oracle + SQL Server'],
@@ -113,6 +115,7 @@ const WORKLOADS = {
   },
   realtime: {
     mode:'realtime', css:'#36e0ff', rgb:'54,224,255', speed:2.3,
+    stats:{ vol:[4812,'events / second'], lat:[280,'ms p99 latency'], perf:[99,'% uptime'] },
     nodes:['4,812 ev/s','sub-sec dedupe','live KPIs','280 ms p99'],
     console:[
       ['k','>>> ','','readStream.trigger(processingTime="1s")'],
@@ -121,6 +124,21 @@ const WORKLOADS = {
       ['','[gold]   ','ok','✓ ','','streaming KPIs refreshed'],
       ['','[push]   ','ok','✓ ','','→ dashboard · ','n','280 ms','',' p99'],
       ['ok','◆ realtime stream · healthy','','']
+    ]
+  },
+  backfill: {
+    mode:'backfill', css:'#ffb454', rgb:'255,180,84', speed:.22,
+    stats:{ vol:[2400,'GB backfilled'], lat:[9,'hr full replay'], perf:[100,'% history rebuilt'] },
+    nodes:['2.4 TB replay','full re-merge','history rebuilt','backfill done'],
+    console:[
+      ['k','>>> ','','spark.read.option("startingVersion",0)  # full replay'],
+      ['','[bronze] ','ok','✓ ','','replaying ','n','2.4 TB','',' of history'],
+      ['','[silver] ','ok','✓ ','','re-merging every partition'],
+      ['','[gold]   ','ok','✓ ','','KPIs recomputed end-to-end'],
+      ['','[verify] ','ok','✓ ','','row counts reconciled · ','n','100%'],
+      ['k','>>> ','','progress()','',''],
+      ['','[metric] ','ok','✓ ','','full replay in ','n','9h 12m'],
+      ['ok','◆ backfill complete · history rebuilt','','']
     ]
   }
 };
@@ -146,17 +164,45 @@ function runConsole(){
 /* ===== Pipeline switcher — clicking a button morphs the page data ===== */
 let netAccentRGB = WORKLOADS.streaming.rgb;  // background network colour
 let netSpeedMul = WORKLOADS.streaming.speed; // background packet speed
+let currentKey = 'streaming';
 const swButtons = document.querySelectorAll('.sw-btn');
 const nMetrics = document.querySelectorAll('.n-metric');
 const conMode = document.getElementById('console-mode');
+
+// reactive hero stat counters (years stays fixed via data-count)
+const statSlots = {};
+document.querySelectorAll('.stat b[data-slot]').forEach(b => statSlots[b.dataset.slot] = b);
+let statsRevealed = false;
+function animateCount(el, target){
+  clearInterval(el._iv);
+  let n = 0; const step = Math.max(1, target / 35);
+  el._iv = setInterval(()=>{
+    n += step;
+    if(n >= target){ n = target; clearInterval(el._iv); }
+    el.textContent = Math.round(n).toLocaleString();
+  }, 28);
+}
+function applyStats(w, animate){
+  if(!w.stats) return;
+  Object.keys(statSlots).forEach(slot => {
+    const conf = w.stats[slot]; if(!conf) return;
+    const [val, label] = conf, b = statSlots[slot];
+    if(b.nextElementSibling) b.nextElementSibling.textContent = label;
+    if(animate) animateCount(b, val); else b.textContent = val.toLocaleString();
+  });
+}
+
 function setWorkload(key){
   const w = WORKLOADS[key]; if(!w) return;
+  currentKey = key;
   swButtons.forEach(b => b.classList.toggle('active', b.dataset.w === key));
   // flip the medallion node metrics
   nMetrics.forEach((el, i) => {
     el.classList.add('flip');
     setTimeout(()=>{ el.textContent = w.nodes[i]; el.classList.remove('flip'); }, 220);
   });
+  // re-count the hero stats (only once they've been revealed)
+  if(statsRevealed) applyStats(w, true);
   // re-run the console with this workload's log
   conLines = w.console;
   if(conMode) conMode.textContent = w.mode;
@@ -166,7 +212,33 @@ function setWorkload(key){
   netAccentRGB = w.rgb;
   netSpeedMul = w.speed;
 }
-swButtons.forEach(b => b.addEventListener('click', ()=>setWorkload(b.dataset.w)));
+
+// animate the reactive stats when they first scroll into view
+const statsEl = document.querySelector('.stats');
+if(statsEl){
+  new IntersectionObserver((es, ob)=>{
+    es.forEach(e=>{
+      if(!e.isIntersecting) return;
+      statsRevealed = true;
+      applyStats(WORKLOADS[currentKey], true);
+      ob.unobserve(e.target);
+    });
+  }, { threshold:.5 }).observe(statsEl);
+}
+
+/* auto-cycle through workloads until the visitor takes over */
+const CYCLE = ['streaming','batch','realtime','backfill'];
+let cycleTimer = null;
+function stopCycle(){ if(cycleTimer){ clearInterval(cycleTimer); cycleTimer = null; } }
+function startCycle(){
+  stopCycle();
+  cycleTimer = setInterval(()=>{
+    setWorkload(CYCLE[(CYCLE.indexOf(currentKey) + 1) % CYCLE.length]);
+  }, 6000);
+}
+swButtons.forEach(b => b.addEventListener('click', ()=>{ stopCycle(); setWorkload(b.dataset.w); }));
+// kick off the auto-tour shortly after load (respect reduced-motion)
+if(!matchMedia('(prefers-reduced-motion: reduce)').matches) setTimeout(startCycle, 5000);
 
 /* ===== Reveal ===== */
 const io = new IntersectionObserver((es)=>{
