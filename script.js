@@ -164,60 +164,127 @@ form.addEventListener('submit', async (e)=>{
   }finally{ sendBtn.classList.remove('sending'); }
 });
 
-/* ===== Interactive 3D particle globe ===== */
+/* ===== Animated data-pipeline network (DAG) ===== */
+/* A directed graph of nodes (data stores) connected by edges (pipelines),
+   with packets streaming left → right through the stages — the way data
+   actually moves through a medallion architecture. */
 const cv = document.getElementById('globe');
 const ctx = cv.getContext('2d');
-let W,H,R,pts=[],rot=0,tmx=0,tmy=0,camx=0,camy=0;
-function resize(){
-  W=cv.width=cv.offsetWidth; H=cv.height=cv.offsetHeight; R=Math.min(W,H)*.34;
-}
-function makeGlobe(){
-  pts=[]; const N=620;
-  for(let i=0;i<N;i++){
-    const y=1-(i/(N-1))*2;
-    const r=Math.sqrt(1-y*y);
-    const phi=i*Math.PI*(3-Math.sqrt(5));
-    pts.push({x:Math.cos(phi)*r, y, z:Math.sin(phi)*r});
-  }
-}
-resize(); makeGlobe(); addEventListener('resize',()=>{resize();});
-addEventListener('mousemove',e=>{ tmx=(e.clientX/innerWidth-.5); tmy=(e.clientY/innerHeight-.5); });
-function drawGlobe(){
-  ctx.clearRect(0,0,W,H);
-  camx += (tmy*.5-camx)*.05; camy += (tmx*.5-camy)*.05;
-  rot += .0016;
-  const cx=W/2, cy=H/2;
-  const cosY=Math.cos(rot+camy), sinY=Math.sin(rot+camy);
-  const cosX=Math.cos(camx), sinX=Math.sin(camx);
-  const proj=pts.map(p=>{
-    let x=p.x*cosY - p.z*sinY;
-    let z=p.x*sinY + p.z*cosY;
-    let y=p.y*cosX - z*sinX;
-    z=p.y*sinX + z*cosX;
-    const scale=320/(320+z*R);
-    return {sx:cx+x*R*scale, sy:cy+y*R*scale, z, scale};
-  });
-  // connections
-  for(let i=0;i<proj.length;i+=2){
-    const a=proj[i];
-    for(let j=i+1;j<i+6 && j<proj.length;j++){
-      const b=proj[j];
-      const d=Math.hypot(a.sx-b.sx,a.sy-b.sy);
-      if(d<60){
-        ctx.strokeStyle=`rgba(198,255,58,${.10*(1-d/60)*Math.max(0,a.scale-.6)})`;
-        ctx.lineWidth=.6;
-        ctx.beginPath();ctx.moveTo(a.sx,a.sy);ctx.lineTo(b.sx,b.sy);ctx.stroke();
-      }
+let W, H, layers = [], edges = [], packets = [], tmx = 0, tmy = 0, camx = 0, camy = 0;
+const COLS = 6;                 // pipeline stages across the canvas
+const ROWS_RANGE = [2, 4];      // nodes per stage
+
+function resize(){ W = cv.width = cv.offsetWidth; H = cv.height = cv.offsetHeight; buildGraph(); }
+
+function buildGraph(){
+  layers = []; edges = []; packets = [];
+  const padX = W * 0.10, padY = H * 0.12;
+  const usableW = W - padX * 2, usableH = H - padY * 2;
+  // lay out nodes in columns (pipeline stages)
+  for(let c = 0; c < COLS; c++){
+    const rows = ROWS_RANGE[0] + Math.floor(Math.random() * (ROWS_RANGE[1] - ROWS_RANGE[0] + 1));
+    const col = [];
+    for(let r = 0; r < rows; r++){
+      col.push({
+        x: padX + (usableW * c) / (COLS - 1),
+        y: padY + usableH * ((r + 0.5) / rows) + (Math.random() - 0.5) * 40,
+        bx: 0, by: 0,                       // parallax offset
+        pulse: Math.random() * Math.PI * 2, // staggered glow
+        big: Math.random() < 0.35           // some are "stores", drawn larger
+      });
     }
+    layers.push(col);
   }
-  // dots
-  const light = document.body.classList.contains('light');
-  proj.forEach(p=>{
-    const op=Math.max(.08,(p.scale-.55)*1.4);
-    const front = light ? `rgba(60,90,30,${op})` : `rgba(198,255,58,${op})`;
-    ctx.fillStyle = p.z<0 ? `rgba(123,92,255,${op})` : front;
-    ctx.beginPath();ctx.arc(p.sx,p.sy,1.5*p.scale,0,7);ctx.fill();
-  });
-  requestAnimationFrame(drawGlobe);
+  // connect each node to 1–2 nodes in the next stage (directed, left → right)
+  for(let c = 0; c < COLS - 1; c++){
+    layers[c].forEach(a => {
+      const next = layers[c + 1];
+      const fanout = 1 + (Math.random() < 0.5 ? 1 : 0);
+      const picks = new Set();
+      for(let k = 0; k < fanout; k++) picks.add(Math.floor(Math.random() * next.length));
+      picks.forEach(idx => {
+        const b = next[idx];
+        edges.push({ a, b });
+        // seed a couple of packets per edge at varied progress
+        const count = 1 + Math.floor(Math.random() * 2);
+        for(let p = 0; p < count; p++){
+          packets.push({ a, b, t: Math.random(), speed: 0.0016 + Math.random() * 0.0026 });
+        }
+      });
+    });
+  }
 }
-drawGlobe();
+
+resize();
+addEventListener('resize', resize);
+addEventListener('mousemove', e => { tmx = (e.clientX / innerWidth - 0.5); tmy = (e.clientY / innerHeight - 0.5); });
+
+function drawGraph(){
+  ctx.clearRect(0, 0, W, H);
+  // gentle parallax that follows the cursor
+  camx += (tmx * 26 - camx) * 0.05;
+  camy += (tmy * 26 - camy) * 0.05;
+  const light = document.body.classList.contains('light');
+  const tsec = performance.now() / 1000;
+
+  // apply parallax (deeper stages drift a touch more)
+  layers.forEach((col, c) => col.forEach(n => {
+    const depth = 0.4 + c / (COLS - 1);
+    n.bx = camx * depth; n.by = camy * depth;
+  }));
+
+  const edge   = light ? 'rgba(40,55,20,'  : 'rgba(198,255,58,';
+  const accent = light ? '60,90,30'        : '198,255,58';
+  const accent2 = '123,92,255';
+
+  // edges (pipelines)
+  ctx.lineWidth = 0.7;
+  edges.forEach(({ a, b }) => {
+    ctx.strokeStyle = edge + '0.10)';
+    ctx.beginPath();
+    ctx.moveTo(a.x + a.bx, a.y + a.by);
+    ctx.lineTo(b.x + b.bx, b.y + b.by);
+    ctx.stroke();
+  });
+
+  // packets flowing along edges
+  packets.forEach(pk => {
+    pk.t += pk.speed;
+    if(pk.t > 1) pk.t -= 1;
+    const ax = pk.a.x + pk.a.bx, ay = pk.a.y + pk.a.by;
+    const bx = pk.b.x + pk.b.bx, by = pk.b.y + pk.b.by;
+    const x = ax + (bx - ax) * pk.t;
+    const y = ay + (by - ay) * pk.t;
+    const fade = Math.sin(pk.t * Math.PI);           // brighter mid-edge
+    const col = pk.speed > 0.0032 ? accent2 : accent; // faster = streaming (purple)
+    ctx.fillStyle = `rgba(${col},${0.5 * fade})`;
+    ctx.beginPath(); ctx.arc(x, y, 1.7, 0, 7); ctx.fill();
+    // little trailing comet
+    ctx.fillStyle = `rgba(${col},${0.18 * fade})`;
+    const tx = ax + (bx - ax) * Math.max(0, pk.t - 0.04);
+    const ty = ay + (by - ay) * Math.max(0, pk.t - 0.04);
+    ctx.beginPath(); ctx.arc(tx, ty, 1.1, 0, 7); ctx.fill();
+  });
+
+  // nodes (data stores)
+  layers.forEach(col => col.forEach(n => {
+    const glow = (Math.sin(tsec * 1.4 + n.pulse) + 1) / 2;     // 0→1 breathing
+    const r = (n.big ? 3.6 : 2.2) + glow * 1.2;
+    const op = 0.35 + glow * 0.4;
+    // halo
+    ctx.fillStyle = `rgba(${accent},${0.08 * glow})`;
+    ctx.beginPath(); ctx.arc(n.x + n.bx, n.y + n.by, r * 3, 0, 7); ctx.fill();
+    // core
+    ctx.fillStyle = `rgba(${accent},${op})`;
+    ctx.beginPath(); ctx.arc(n.x + n.bx, n.y + n.by, r, 0, 7); ctx.fill();
+    // ring on bigger "store" nodes
+    if(n.big){
+      ctx.strokeStyle = `rgba(${accent},${0.25 * op})`;
+      ctx.lineWidth = 0.8;
+      ctx.beginPath(); ctx.arc(n.x + n.bx, n.y + n.by, r + 4, 0, 7); ctx.stroke();
+    }
+  }));
+
+  requestAnimationFrame(drawGraph);
+}
+drawGraph();
