@@ -3,162 +3,144 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Nishchitha C · Data Engineer</title>
-<meta name="description" content="Nishchitha C — Data Engineer building reliable pipelines, clean data models, and elegant code." />
+<title>Nishchitha C — Data Engineer</title>
+<meta name="description" content="Nishchitha C — Data Engineer architecting pipelines that move at the speed of thought." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Space+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-<canvas id="bg-canvas" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+<div class="cursor" id="cursor" aria-hidden="true"></div>
+<div class="cursor-dot" id="cursor-dot" aria-hidden="true"></div>
+<div class="progress" id="progress" aria-hidden="true"></div>
+
+<canvas id="globe" aria-hidden="true"></canvas>
 
 <!-- NAV -->
 <header class="nav">
-  <a class="brand" href="#top"><span class="brand-dot"></span>nishchitha<span class="accent">.c</span></a>
+  <a class="brand magnetic" href="#top">N<span class="accent">/</span>C</a>
   <nav class="nav-links">
-    <a href="#about">about</a>
-    <a href="#pipeline">pipeline</a>
-    <a href="#projects">projects</a>
-    <a href="#skills">stack</a>
-    <a href="#contact">contact</a>
+    <a class="magnetic" href="#work">work</a>
+    <a class="magnetic" href="#flow">flow</a>
+    <a class="magnetic" href="#stack">stack</a>
+    <a class="magnetic" href="#contact">contact</a>
   </nav>
 </header>
 
 <main id="top">
   <!-- HERO -->
   <section class="hero">
-    <div class="hero-inner">
-      <p class="kicker reveal">// data engineer · pipeline architect</p>
-      <h1 class="reveal">Hi, I'm <span class="grad">Nishchitha&nbsp;C</span>.<br />I turn raw data into <span class="type" id="typed"></span><span class="caret">|</span></h1>
-      <p class="lead reveal">I design and build resilient data systems — ingestion, transformation, orchestration, and the clean code that ties it all together. Coffee in, insights out.</p>
-      <div class="hero-cta reveal">
-        <a class="btn primary" href="#projects">View projects</a>
-        <a class="btn ghost" href="#contact">Get in touch</a>
-      </div>
-      <div class="hero-stats reveal">
-        <div><strong data-count="12">0</strong><span>pipelines shipped</span></div>
-        <div><strong data-count="40">0</strong><span>TB processed</span></div>
-        <div><strong data-count="99">0</strong><span>% uptime</span></div>
-      </div>
+    <p class="tag"><span class="pulse"></span>AVAILABLE FOR DATA ENGINEERING WORK</p>
+    <h1 class="mega">
+      <span class="line"><span class="w">DATA</span></span>
+      <span class="line"><span class="w outline">ENGINEER</span></span>
+      <span class="line sub"><span class="w">/ Nishchitha&nbsp;C</span></span>
+    </h1>
+    <div class="hero-foot">
+      <p class="hero-desc">I architect pipelines that turn chaos into clean, queryable truth — <span id="typed"></span><span class="caret">_</span></p>
+      <a href="#contact" class="cta magnetic"><span>Start a project</span><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
     </div>
-    <div class="terminal reveal" aria-hidden="true">
-      <div class="term-bar"><span></span><span></span><span></span><em>etl_pipeline.py</em></div>
-      <pre class="term-body"><code id="code-anim"></code></pre>
-    </div>
+    <div class="scroll-hint">SCROLL <span>↓</span></div>
   </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span>PYTHON ✦ SQL ✦ AIRFLOW ✦ dbt ✦ SPARK ✦ KAFKA ✦ BIGQUERY ✦ SNOWFLAKE ✦ DOCKER ✦ TERRAFORM ✦ GCP ✦</span>
+      <span>PYTHON ✦ SQL ✦ AIRFLOW ✦ dbt ✦ SPARK ✦ KAFKA ✦ BIGQUERY ✦ SNOWFLAKE ✦ DOCKER ✦ TERRAFORM ✦ GCP ✦</span>
+    </div>
+  </div>
 
   <!-- ABOUT -->
-  <section id="about" class="section">
-    <h2 class="section-title"><span class="num">01</span> About</h2>
-    <div class="about-grid">
-      <p class="reveal">I'm a data engineer who loves the unglamorous, high-leverage work: making data <strong>trustworthy</strong>, pipelines <strong>idempotent</strong>, and systems <strong>observable</strong>. My background spans software engineering and data — from writing Python and SQL to wiring up CI/CD and cloud infrastructure.</p>
-      <p class="reveal">I care about code that reads well, schemas that age gracefully, and dashboards people actually trust. When I'm not orchestrating DAGs, I'm automating the boring stuff so humans don't have to.</p>
+  <section id="about" class="section about">
+    <span class="eyebrow">(01) WHO</span>
+    <p class="big-statement">I build the <em>invisible infrastructure</em> behind every dashboard, model, and decision — <span class="muted">resilient ingestion, tested transformations, and orchestration you can sleep through.</span></p>
+    <div class="stats">
+      <div class="stat magnetic"><b data-count="12">0</b><span>pipelines shipped</span></div>
+      <div class="stat magnetic"><b data-count="40">0</b><span>TB processed</span></div>
+      <div class="stat magnetic"><b data-count="99">0</b><span>% uptime</span></div>
+      <div class="stat magnetic"><b data-count="6">0</b><span>cloud services</span></div>
     </div>
   </section>
 
-  <!-- PIPELINE / TIMELINE -->
-  <section id="pipeline" class="section">
-    <h2 class="section-title"><span class="num">02</span> The Pipeline</h2>
-    <p class="section-sub reveal">How I think about data — and how my experience has flowed.</p>
-    <div class="pipeline">
-      <div class="stage reveal"><div class="stage-icon">⛏</div><h3>Ingest</h3><p>Batch &amp; streaming sources, APIs, change-data-capture. Land it raw, land it safely.</p></div>
-      <div class="stage reveal"><div class="stage-icon">🧪</div><h3>Transform</h3><p>Clean, dedupe, model. dbt-style modular SQL and tested Python.</p></div>
-      <div class="stage reveal"><div class="stage-icon">⚙️</div><h3>Orchestrate</h3><p>Scheduled DAGs, retries, alerts. Idempotent by design.</p></div>
-      <div class="stage reveal"><div class="stage-icon">📊</div><h3>Serve</h3><p>Warehouses, marts, and APIs that downstream teams actually trust.</p></div>
-    </div>
-
-    <div class="timeline">
-      <div class="t-item reveal">
-        <div class="t-dot"></div>
-        <span class="t-date">2020 — 2021</span>
-        <h3>Software Engineer Intern</h3>
-        <p>Built an automated daily test service, wiring Python &amp; PowerShell scripts into a Jenkins CI pipeline to aggregate XML results and report regressions automatically.</p>
-        <div class="tags"><span>Python</span><span>Jenkins</span><span>CI/CD</span></div>
-      </div>
-      <div class="t-item reveal">
-        <div class="t-dot"></div>
-        <span class="t-date">2019 — 2020</span>
-        <h3>Developer Intern</h3>
-        <p>Shipped front-end features and integrated cloud-backed data storage across web &amp; mobile, collaborating through Git-based workflows.</p>
-        <div class="tags"><span>Firebase</span><span>Git</span><span>Cloud</span></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- PROJECTS -->
-  <section id="projects" class="section">
-    <h2 class="section-title"><span class="num">03</span> Projects</h2>
-    <div class="projects">
-      <article class="card reveal">
-        <div class="card-glow"></div>
-        <h3>Cloud Automation Bot</h3>
-        <p>A Python &amp; Selenium bot deployed on a cloud VM, scheduled with Cron to perform automated reservations every morning — fully hands-off.</p>
-        <div class="tags"><span>Python</span><span>Selenium</span><span>GCP</span><span>Cron</span></div>
-      </article>
-      <article class="card reveal">
-        <div class="card-glow"></div>
-        <h3>Pricing Engine App</h3>
-        <p>A back-end pricing calculator that processes user input and returns computed totals, with a clean UI layer and clear state transitions.</p>
-        <div class="tags"><span>Java</span><span>OOP</span><span>UI</span></div>
-      </article>
-      <article class="card reveal">
-        <div class="card-glow"></div>
-        <h3>Transaction Management System</h3>
-        <p>A banking-style transaction simulator modeling accounts, deposits and withdrawals using object-oriented design and an in-memory data store.</p>
-        <div class="tags"><span>Java</span><span>JavaFX</span><span>Data Modeling</span></div>
-      </article>
-      <article class="card reveal feature">
-        <div class="card-glow"></div>
-        <h3>End-to-End ETL Pipeline</h3>
-        <p>A modular ingestion → transformation → warehouse pipeline with tested transformations, scheduled orchestration, and data-quality checks at every stage.</p>
-        <div class="tags"><span>Python</span><span>SQL</span><span>Airflow</span><span>dbt</span></div>
-      </article>
+  <!-- WORK -->
+  <section id="work" class="section">
+    <span class="eyebrow">(02) SELECTED WORK</span>
+    <div class="work-list">
+      <a class="work-row" href="#contact">
+        <span class="w-idx">01</span>
+        <h3>End-to-End ETL Platform</h3>
+        <span class="w-tags">Python · Airflow · dbt</span>
+        <span class="w-arrow">↗</span>
+      </a>
+      <a class="work-row" href="#contact">
+        <span class="w-idx">02</span>
+        <h3>Cloud Automation Engine</h3>
+        <span class="w-tags">Python · Selenium · GCP · Cron</span>
+        <span class="w-arrow">↗</span>
+      </a>
+      <a class="work-row" href="#contact">
+        <span class="w-idx">03</span>
+        <h3>CI Test-Aggregation Service</h3>
+        <span class="w-tags">Python · Jenkins · CI/CD</span>
+        <span class="w-arrow">↗</span>
+      </a>
+      <a class="work-row" href="#contact">
+        <span class="w-idx">04</span>
+        <h3>Transaction Data System</h3>
+        <span class="w-tags">Java · JavaFX · Data Modeling</span>
+        <span class="w-arrow">↗</span>
+      </a>
     </div>
   </section>
 
-  <!-- SKILLS -->
-  <section id="skills" class="section">
-    <h2 class="section-title"><span class="num">04</span> Stack</h2>
-    <div class="skills">
-      <div class="skill-col reveal">
-        <h3>Languages</h3>
-        <div class="bar" data-level="92"><span>Python</span><i></i></div>
-        <div class="bar" data-level="88"><span>SQL</span><i></i></div>
-        <div class="bar" data-level="78"><span>Java</span><i></i></div>
-        <div class="bar" data-level="70"><span>JavaScript</span><i></i></div>
-      </div>
-      <div class="skill-col reveal">
-        <h3>Data &amp; Cloud</h3>
-        <div class="bar" data-level="85"><span>Airflow / dbt</span><i></i></div>
-        <div class="bar" data-level="82"><span>Google Cloud</span><i></i></div>
-        <div class="bar" data-level="80"><span>Warehousing</span><i></i></div>
-        <div class="bar" data-level="75"><span>Spark</span><i></i></div>
-      </div>
-      <div class="skill-col reveal">
-        <h3>Tooling</h3>
-        <div class="bar" data-level="90"><span>Git / GitHub</span><i></i></div>
-        <div class="bar" data-level="84"><span>Jenkins / CI</span><i></i></div>
-        <div class="bar" data-level="80"><span>Linux</span><i></i></div>
-        <div class="bar" data-level="78"><span>Docker</span><i></i></div>
-      </div>
+  <!-- FLOW -->
+  <section id="flow" class="section">
+    <span class="eyebrow">(03) HOW DATA MOVES</span>
+    <div class="flow">
+      <div class="node tilt"><span class="n-num">01</span><h4>Ingest</h4><p>Batch &amp; streaming, APIs, CDC. Land it raw, land it safe.</p></div>
+      <div class="flow-arrow">→</div>
+      <div class="node tilt"><span class="n-num">02</span><h4>Transform</h4><p>Modular, tested SQL &amp; Python. Clean, dedupe, model.</p></div>
+      <div class="flow-arrow">→</div>
+      <div class="node tilt"><span class="n-num">03</span><h4>Orchestrate</h4><p>Idempotent DAGs, retries, alerts, lineage.</p></div>
+      <div class="flow-arrow">→</div>
+      <div class="node tilt"><span class="n-num">04</span><h4>Serve</h4><p>Warehouses &amp; marts downstream teams trust.</p></div>
+    </div>
+    <div class="console tilt">
+      <div class="console-bar"><i></i><i></i><i></i><em>~/pipeline · streaming</em></div>
+      <pre id="console"></pre>
+    </div>
+  </section>
+
+  <!-- STACK -->
+  <section id="stack" class="section">
+    <span class="eyebrow">(04) THE STACK</span>
+    <div class="chips" id="chips">
+      <span data-w="92">Python</span><span data-w="88">SQL</span><span data-w="85">Airflow</span>
+      <span data-w="83">dbt</span><span data-w="80">Spark</span><span data-w="78">Kafka</span>
+      <span data-w="82">BigQuery</span><span data-w="84">Google Cloud</span><span data-w="86">Git</span>
+      <span data-w="80">Jenkins</span><span data-w="79">Docker</span><span data-w="76">Linux</span>
+      <span data-w="78">Java</span><span data-w="74">Terraform</span>
     </div>
   </section>
 
   <!-- CONTACT -->
   <section id="contact" class="section contact">
-    <h2 class="section-title"><span class="num">05</span> Let's build something</h2>
-    <p class="section-sub reveal">Got data that needs a home — or a pipeline that needs a friend? Reach out.</p>
-    <div class="contact-links reveal">
-      <a class="btn primary" href="mailto:cnish1111@gmail.com">cnish1111@gmail.com</a>
-      <a class="btn ghost" href="https://github.com/nishchitha-c" target="_blank" rel="noopener">GitHub</a>
-      <a class="btn ghost" href="https://linkedin.com/in/" target="_blank" rel="noopener">LinkedIn</a>
+    <span class="eyebrow">(05) CONTACT</span>
+    <h2 class="contact-mega">LET'S MOVE<br><span class="outline">SOME DATA.</span></h2>
+    <a class="mail magnetic" href="mailto:cnish1111@gmail.com">cnish1111@gmail.com</a>
+    <div class="socials">
+      <a class="magnetic" href="https://github.com/nishchitha-c" target="_blank" rel="noopener">GITHUB</a>
+      <a class="magnetic" href="https://linkedin.com/in/" target="_blank" rel="noopener">LINKEDIN</a>
     </div>
   </section>
 </main>
 
 <footer class="footer">
-  <span>Built with curiosity &amp; clean code by Nishchitha C · <span id="year"></span></span>
+  <span>© <span id="year"></span> NISHCHITHA C</span>
+  <span>BUILT WITH CLEAN CODE &amp; CAFFEINE</span>
 </footer>
 
 <script src="script.js"></script>
